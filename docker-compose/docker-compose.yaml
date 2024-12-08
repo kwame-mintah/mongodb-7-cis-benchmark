@@ -7,12 +7,14 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
     command: ["mongod", "--config", "/etc/mongod.conf"]
+    user: "999:999" # uid=999(mongodb) gid=999(mongodb) groups=999(mongodb)
     ports:
-      - 27017:27017
-    expose:
-      - 27017
+      - 27071:27071
     volumes:
       - ./mongod.conf:/etc/mongod.conf:ro
+      - ./keyfile:/etc/mongodb/ssl/keyfile:ro
+      - ./mongodb.pem:/etc/ssl/mongodb.pem:ro
+      - ./certificate.pem:/etc/ssl/certificate.pem:ro
 
 networks:
   mongodb:

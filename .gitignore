@@ -1,3 +1,8 @@
 # Directory environment variables
 .envrc
 .env
+*keyfile*
+*.pem
+*.csr
+*.srl
+*.key

@@ -12,10 +12,20 @@ depending on how your chosen instance is being run, e.g. via docker-compose, doc
 ## Addressing Benchmarks
 
 There are several ways of addressing the issues raised by CIS, however the project will make the assumption that the MongoDB
-server being started is *new* and not an existing one. Please note, that with existing instances, some commands may need to be run
+server being started is _new_ and not an existing one. Please note, that with existing instances, some commands may need to be run
 while the instance is running and sometimes requires a restart.
 
 The [mongod.conf](./docker-compose/mongod.conf) configuration file can be used in most cases to address the concerns raised.
+
+## Environment variables
+
+The following environment variable need to be set before attempting to start any of the services, such as
+setting the [root](https://www.mongodb.com/docs/manual/reference/built-in-roles/#root) username and password etc.
+
+| Environment Variable | Description               |
+| -------------------- | ------------------------- |
+| MONGO_ROOT_USERNAME  | The root users' username. |
+| MONGO_ROOT_PASSWORD  | The root users' password  |
 
 ## Usage
 
@@ -23,30 +33,39 @@ The [mongod.conf](./docker-compose/mongod.conf) configuration file can be used i
 
 The following steps can be used to start up the MongoDB instance via [docker compose](https://docs.docker.com/compose/):
 
-1. Navigate to the [docker-compose](/docker-compose/docker-compose.yaml) directory
-2. Run `docker compose up -d`
+1. Navigate to the [docker-compose](/docker-compose/docker-compose.yaml) directory,
+2. Run `docker compose up -d`.
 
-## Environment variables
+### Connecting to database via Studio3T (Free edition)
 
-The following environment variable need to be set before attempting to start any of the services.
+The following steps can be used to connect to your MongoDB instance via Studio3T application:
 
-| Environment Variable | Description                                                                                     |
-| -------------------- | ----------------------------------------------------------------------------------------------- |
-| MONGO_ROOT_USERNAME  | The [root](https://www.mongodb.com/docs/manual/reference/built-in-roles/#root) users' username. |
-| MONGO_ROOT_PASSWORD  | The root users' password                                                                        |
+1. Copy the following URL and replace words in capitals accordingly,
+
+   ```markdown
+   mongodb://MONGO_ROOT_USERNAME:MONGO_ROOT_PASSWORD@127.0.0.1:27071/admin?retryWrites=true&loadBalanced=false&serverSelectionTimeoutMS=2000&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-1
+   ```
+
+2. Add a 'new connection' via Studio3T and paste into the 'URI' text box.
 
 ## Helpful commands
 
 The following below are a list of commands that are helpful to verify various.
 
-Print a list of all the databases created:
+Print a [list of all the databases](https://www.mongodb.com/docs/manual/reference/command/listDatabases/) created:
 
 ```shell
-mongosh -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD --quiet --eval  "printjson(db.adminCommand('listDatabases'))"
+mongosh -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD 127.0.0.1:27071 --quiet --eval  "printjson(db.adminCommand('listDatabases'))"
 ```
 
 Query database for roles scoped in "admin" database:
 
 ```shell
-mongosh -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD --quiet --eval "printjson(db.system.users.find({\"roles.role\":{\$in:[\"dbOwner\",\"userAdmin\",\"userAdminAnyDatabase\"]},\"roles.db\": \"admin\" }))"
+mongosh -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD 127.0.0.1:27071 --quiet --eval "printjson(db.system.users.find({\"roles.role\":{\$in:[\"dbOwner\",\"userAdmin\",\"userAdminAnyDatabase\"]},\"roles.db\": \"admin\" }))"
+```
+
+Get [command line arguments](https://www.mongodb.com/docs/manual/reference/command/getCmdLineOpts/#getcmdlineopts) passed:
+
+```shell
+mongosh -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD 127.0.0.1:27071 --quiet --eval "printjson(db.serverCmdLineOpts())"
 ```

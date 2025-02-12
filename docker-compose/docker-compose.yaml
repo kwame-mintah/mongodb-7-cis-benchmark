@@ -1,7 +1,7 @@
 services:
   mongodb:
-    image: mongo:7
-    # platform: "linux/amd64"
+    image: mongo:7.0
+    platform: "linux/arm64/v8"
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
@@ -12,9 +12,9 @@ services:
       - 27071:27071
     volumes:
       - ./mongod.conf:/etc/mongod.conf:ro
-      - ./keyfile:/etc/mongodb/ssl/keyfile:ro
-      - ./mongodb.pem:/etc/ssl/mongodb.pem:ro
-      - ./certificate.pem:/etc/ssl/certificate.pem:ro
+      - ./keyfile:/etc/ssl/security/keyfile:ro
+      - ./mongodb.pem:/etc/tls/mongodb.pem:ro
+      - ./certificate.pem:/etc/tls/certificate.pem:ro
 
 networks:
   mongodb:

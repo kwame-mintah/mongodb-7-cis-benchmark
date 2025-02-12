@@ -35,6 +35,14 @@ The following steps can be used to start up the MongoDB instance via [docker com
 
 1. Navigate to the [docker-compose](/docker-compose/docker-compose.yaml) directory,
 2. Run `docker compose up -d`.
+   
+### Docker Stack
+
+The following steps can be used to start up the MongoDB instance via [docker swarm](https://docs.docker.com/engine/swarm/):
+
+1. Navigate to the [docker-stack](/docker-stack/docker-compose.yaml) directory,
+2. Initialize a swarm with `docker swarm init`,
+3. Deploy the services onto the node `docker stack deploy --compose-file docker-compose.yaml mongodb_cis_benchmarks --detach=false`.
 
 ### Connecting to database via Studio3T (Free edition)
 

@@ -1,0 +1,33 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    command: ["mongod", "--config", "/etc/mongod.conf"]
+    user: "999:999" # uid=999(mongodb) gid=999(mongodb) groups=999(mongodb)
+    ports:
+      - 27071:27071
+    deploy:
+      mode: replicated
+      replicas: 2
+      labels:
+        mongodb.instance.purpose: "An example docker stack deployment"
+      rollback_config:
+        failure_action: pause
+      update_config:
+        failure_action: rollback
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    volumes:
+      - ./mongod.conf:/etc/mongod.conf:ro
+      # - ./keyfile:/etc/ssl/security/keyfile:ro
+      # - ./mongodb.pem:/etc/tls/mongodb.pem:ro
+      # - ./certificate.pem:/etc/tls/certificate.pem:ro
+
+networks:
+  mongodb:

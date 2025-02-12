@@ -23,3 +23,23 @@ generate-ca-signing-request: # Generate a certificate signing request (CSR) for 
 
 sign-server-csr-with-ca: generate-server-key generate-self-signed-ca generate-ca-signing-request # Sign the server CSR with the CA certificate
 	openssl x509 -req -in $(path)server.csr -CA $(path)ca.pem -CAkey $(path)ca.key -CAcreateserial -out $(path)server.pem -days 365
+
+docker-stack-deploy:
+	@echo "Checking if path equals 'docker-stack'..."
+	@if [[ "$(path)" == "./docker-compose/" ]]; then \
+		echo "Please use the docker-compose.yml found in docker-stack instead"; \
+		exit 1; \
+	fi
+	@echo "Starting docker swarm"
+	docker swarm init
+	docker stack deploy --compose-file $(path)docker-compose.yaml mongodb_cis_benchmarks --detach=false
+
+docker-stack-remove:
+	@echo "Checking if path equals 'docker-stack'..."
+	@if [[ "$(path)" == "./docker-compose/" ]]; then \
+		echo "Please use the docker-compose.yml found in docker-stack instead"; \
+		exit 1; \
+	fi
+	@echo "Remove deployed docker swarm"
+	docker stack rm mongodb_cis_benchmarks
+	docker swarm leave --force

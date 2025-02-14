@@ -25,9 +25,14 @@ services:
         window: 120s
     volumes:
       - ./mongod.conf:/etc/mongod.conf:ro
-      # - ./keyfile:/etc/ssl/security/keyfile:ro
-      # - ./mongodb.pem:/etc/tls/mongodb.pem:ro
-      # - ./certificate.pem:/etc/tls/certificate.pem:ro
+
+secrets:
+   keyfile:
+    file: ./keyfile
+   certificate_keyfile:
+    file: ./ca.pem
+   server_certificate:
+     file: ./server.pem
 
 networks:
   mongodb:

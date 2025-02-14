@@ -33,14 +33,14 @@ setting the [root](https://www.mongodb.com/docs/manual/reference/built-in-roles/
 
 The following steps can be used to start up the MongoDB instance via [docker compose](https://docs.docker.com/compose/):
 
-1. Navigate to the [docker-compose](/docker-compose/docker-compose.yaml) directory,
-2. Run `docker compose up -d`.
+1. Navigate to [`/docker-compose/`](/docker-compose/) directory which contains the [`docker-compose.yaml`](/docker-compose/docker-compose.yaml) file,
+2. Run container in detached mode with `docker compose up -d`.
    
 ### Docker Stack
 
 The following steps can be used to start up the MongoDB instance via [docker swarm](https://docs.docker.com/engine/swarm/):
 
-1. Navigate to the [docker-stack](/docker-stack/docker-compose.yaml) directory,
+1. Navigate to the [`/docker-stack/`](/docker-stack/) which contains [`docker-compose.yaml`](/docker-stack/docker-compose.yaml) file,
 2. Initialize a swarm with `docker swarm init`,
 3. Deploy the services onto the node `docker stack deploy --compose-file docker-compose.yaml mongodb_cis_benchmarks --detach=false`.
 
